@@ -101,7 +101,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wiloke1/wilvalidator.git"
+    "url": "git+https://github.com/wiloke1/wil-form.git"
   },
   "keywords": [
     "state",
@@ -110,7 +110,7 @@
   "author": "wiloke",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wiloke1/wilvalidator/issues"
+    "url": "https://github.com/wiloke1/wil-form/issues"
   },
-  "homepage": "https://github.com/wiloke1/wilvalidator#readme"
+  "homepage": "https://github.com/wiloke1/wil-form#readme"
 }
