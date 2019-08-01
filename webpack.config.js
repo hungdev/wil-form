@@ -14,7 +14,9 @@ module.exports = (env, argv) => {
       output: {
         path: `${__dirname}/dist`,
         filename: "index.js",
-        libraryTarget: "umd"
+        libraryTarget: "umd",
+        umdNamedDefine: true,
+        globalObject: "this"
       },
 
       module: {
@@ -24,6 +26,10 @@ module.exports = (env, argv) => {
             use: "babel-loader"
           }
         ]
+      },
+
+      optimization: {
+        minimize: false
       },
 
       externals: {

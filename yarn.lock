@@ -2242,6 +2242,16 @@ babel-plugin-istanbul@^5.1.0:
     istanbul-lib-instrument "^3.3.0"
     test-exclude "^5.2.3"
 
+babel-plugin-istanbul@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-istanbul/-/babel-plugin-istanbul-5.2.0.tgz#df4ade83d897a92df069c4d9a25cf2671293c854"
+  integrity sha512-5LphC0USA8t4i1zCtjbbNb6jJj/9+X6P37Qfirc/70EQ34xKlMW+a1RHGwxGI+SwWpNwZ27HqvzAobeqaXwiZw==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+    find-up "^3.0.0"
+    istanbul-lib-instrument "^3.3.0"
+    test-exclude "^5.2.3"
+
 babel-plugin-jest-hoist@^24.6.0:
   version "24.6.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-24.6.0.tgz#f7f7f7ad150ee96d7a5e8e2c5da8319579e78019"
@@ -12516,13 +12526,6 @@ widest-line@^2.0.0:
   integrity sha512-Ba5m9/Fa4Xt9eb2ELXt77JxVDV8w7qQrH0zS/TWSJdLyAwQjWoOzpzj5lwVftDz6n/EOu3tNACS84v509qwnJA==
   dependencies:
     string-width "^2.1.1"
-
-wilvalidator@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/wilvalidator/-/wilvalidator-1.0.10.tgz#dc47e0b721cc99c0bffaa99bbb2de7f54ccd0f9d"
-  integrity sha512-GHCfbNxbKbZC/R7SR+oUUPj4Mbu67IpyLTylORMetwfVnCfT/H1gs1ptUauTvWE8W2S/JxG2MT/rk4RRB7LPLg==
-  dependencies:
-    ramda "^0.26.1"
 
 window-size@1.1.1:
   version "1.1.1"

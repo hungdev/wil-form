@@ -366,9 +366,9 @@ export default class WilForm extends Component<FormProps, FormState> {
           ? `You need to pass the type property: ${JSON.stringify(item)}`
           : `You need to use the defineRenderFields prop to define the render type of a "type".\nEg: <WilForm defineRenderFields={{ ${
               item.type
-            }: "render${
+            }: "render${item.type}" }} render${
               item.type
-            }" }} renderaaa={...} ... />.\nOr use the previously defined type ${JSON.stringify(
+            }={...} ... />.\nOr use the previously defined type ${JSON.stringify(
               getDefineTypeKey
             )}`
       );
