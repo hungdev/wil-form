@@ -194,9 +194,19 @@ export default class WilForm extends Component<FormProps, FormState> {
     value: Array<any> | string
   ): string => {
     const { constraints }: FormState = this.state;
-    const { presence }: Object = constraints[name];
+    const { presence, length, special }: Object = constraints[name];
     if (!!presence && required && !this._hasValue(value)) {
       return presence.message;
+    }
+    if (
+      !!length &&
+      required &&
+      (value.length <= length.minimum || value.length >= length.maximum)
+    ) {
+      return length.message;
+    }
+    if (!!special && required && value.length > 0) {
+      return this._checkFieldSpecial(name, value, special);
     }
     return "";
   };
@@ -250,11 +260,8 @@ export default class WilForm extends Component<FormProps, FormState> {
   _handleFieldFocus = (name: string, required: boolean): Function => (
     value: Array<any> | string
   ): void => {
-    const { result }: FormState = this.state;
     const error: string = this._getMessageErrorFocus(name, required, value);
-    if (!result[name]) {
-      this._setErrors(name, error);
-    }
+    this._setErrors(name, error);
   };
 
   _getMessageErrorFieldChange = ({

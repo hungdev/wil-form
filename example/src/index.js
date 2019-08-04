@@ -104,7 +104,8 @@ class App extends React.Component {
               }
             }}
             defaultResult={{
-              username: "Test"
+              username: "Test",
+              email: "sdfdsfdsfdsfdf"
             }}
             defineRenderFields={{
               text: "renderInput",
