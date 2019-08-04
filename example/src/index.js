@@ -66,7 +66,9 @@ class App extends React.Component {
                 },
                 length: {
                   minimum: 6,
-                  message: "Your username must be at least 6 characters"
+                  maximum: 10,
+                  message:
+                    "Your username must be at least 6 characters and at most 10 characters"
                 }
               },
               password: {
@@ -92,7 +94,7 @@ class App extends React.Component {
                 },
                 length: {
                   minimum: 5,
-                  message: "Your password must be at least 5 characters"
+                  message: "Your password must have at least 5 characters"
                 }
               },
               gender: {

@@ -1,6 +1,13 @@
 // @flow
 import React, { Component, Fragment } from "react";
 import { isEmpty, equals } from "ramda";
+import checkLength from "./checkLength";
+import checkSpecial from "./checkSpecial";
+import checkPresence from "./checkPresence";
+import getObjectFromFields from "./getObjectFromFields";
+import throwErrorType from "./throwErrorType";
+import throwErrorField from "./throwErrorField";
+import throwErrorFnExist from "./throwErrorFnExist";
 
 type RenderElementWithIndex = {
   render: (handleSubmit: Function) => React$Node,
@@ -33,8 +40,6 @@ type FormState = {
   constraints: Object,
   errors: Object
 };
-
-const isDev: boolean = process.env.NODE_ENV === "development";
 
 export default class WilForm extends Component<FormProps, FormState> {
   static defaultProps = {
@@ -122,11 +127,11 @@ export default class WilForm extends Component<FormProps, FormState> {
     await this.setState({
       fields,
       result: {
-        ...this._getObjectFromArray(fields, ""),
+        ...getObjectFromFields(fields, ""),
         ...defaultResult
       },
       constraints: {
-        ...this._getObjectFromArray(fields, {}),
+        ...getObjectFromFields(fields, {}),
         ...constraints
       },
       errors: defaultErrors
@@ -147,15 +152,6 @@ export default class WilForm extends Component<FormProps, FormState> {
   _validFieldSpecial = (type: string, value: Array<any> | string): boolean => {
     const pattern: RegExp = this._getPatterns(type);
     return value.length > 0 && pattern.test(String(value));
-  };
-
-  _getObjectFromArray = (arr: Array<any>, value: any): Object => {
-    return arr.reduce((obj: Object, item: Object): Object => {
-      return {
-        ...obj,
-        [item.name]: value
-      };
-    }, {});
   };
 
   // trả về true nếu mảng errors rỗng
@@ -215,7 +211,11 @@ export default class WilForm extends Component<FormProps, FormState> {
     if (!!presence && required && !this._hasValue(value)) {
       return presence.message;
     }
-    if (!!length && value.length > 0 && value.length <= length.minimum) {
+    if (
+      !!length &&
+      value.length > 0 &&
+      (value.length <= length.minimum || value.length >= length.maximum)
+    ) {
       return length.message;
     }
     if (!!special && value.length > 0) {
@@ -257,66 +257,6 @@ export default class WilForm extends Component<FormProps, FormState> {
     }
   };
 
-  _conditionLength = ({
-    length,
-    presence,
-    special,
-    value,
-    required
-  }: {
-    length: Object,
-    presence: Object,
-    special: Object,
-    value: Array<any> | string,
-    required: boolean
-  }): boolean => {
-    return (
-      !!length &&
-      ((!presence && value.length <= length.minimum) ||
-        (value.length > 0 && value.length <= length.minimum) ||
-        (!!special &&
-          !required &&
-          value.length > 0 &&
-          value.length <= length.minimum) ||
-        (required && value.length > 0 && value.length <= length.minimum))
-    );
-  };
-
-  _conditionSpecial = ({
-    length,
-    presence,
-    special,
-    value,
-    required
-  }: {
-    length: Object,
-    presence: Object,
-    special: Object,
-    value: Array<any> | string,
-    required: boolean
-  }): boolean => {
-    return (
-      !!special &&
-      ((!length && value.length > 0 && required) ||
-        (!length && !presence && value.length >= 0) ||
-        (!required && value.length > 0) ||
-        (!!length && !presence && value.length > 0) ||
-        (!!length && !!presence && required && value.length > 0))
-    );
-  };
-
-  conditionPresence = ({
-    presence,
-    required,
-    value
-  }: {
-    presence: Object,
-    value: Array<any> | string,
-    required: boolean
-  }): boolean => {
-    return !!presence && required && value.length <= 0;
-  };
-
   _getMessageErrorFieldChange = ({
     name,
     value,
@@ -329,17 +269,15 @@ export default class WilForm extends Component<FormProps, FormState> {
     const { constraints }: FormState = this.state;
     const { length, presence, special }: Object = constraints[name];
 
-    if (this._conditionLength({ length, presence, special, value, required })) {
+    if (checkLength({ length, presence, special, value, required })) {
       return length.message;
     }
 
-    if (
-      this._conditionSpecial({ length, presence, special, value, required })
-    ) {
+    if (checkSpecial({ length, presence, special, value, required })) {
       return this._checkFieldSpecial(name, value, special);
     }
 
-    if (this.conditionPresence({ presence, required, value })) {
+    if (checkPresence({ presence, required, value })) {
       return presence.message;
     }
     return "";
@@ -355,25 +293,6 @@ export default class WilForm extends Component<FormProps, FormState> {
     });
     this._setErrors(name, error);
     this._setResult(name, value);
-  };
-
-  _throwErrorType = (item: Object): void => {
-    const defineRenderFields: Object = this._getDefineRenderFields();
-    const getDefineTypeKey: Array<string> = Object.keys(defineRenderFields);
-    if (isDev) {
-      const error: Object = new Error(
-        !item.type
-          ? `You need to pass the type property: ${JSON.stringify(item)}`
-          : `You need to use the defineRenderFields prop to define the render type of a "type".\nEg: <WilForm defineRenderFields={{ ${
-              item.type
-            }: "render${item.type}" }} render${
-              item.type
-            }={...} ... />.\nOr use the previously defined type ${JSON.stringify(
-              getDefineTypeKey
-            )}`
-      );
-      throw error.message;
-    }
   };
 
   _handleBeforeSubmit = async (): Promise<void> => {
@@ -419,24 +338,6 @@ export default class WilForm extends Component<FormProps, FormState> {
     onSubmit({ result, valid, errors });
   };
 
-  _handleErrorItemField = (item: Object): void => {
-    if (typeof item !== "object") {
-      throw new Error(`The element of the passed fields must be an object`)
-        .message;
-    }
-    const arr: Array<string> = Object.keys(item);
-    if (!arr.includes("name")) {
-      throw new Error(
-        `The element of the fields passed must have a "name" property`
-      ).message;
-    }
-    if (!arr.includes("type")) {
-      throw new Error(
-        `The element of the fields passed must have a "type" property`
-      ).message;
-    }
-  };
-
   _renderItem = (item: Object): React$Node | Function => {
     const { errors, result }: FormState = this.state;
     const {
@@ -464,16 +365,12 @@ export default class WilForm extends Component<FormProps, FormState> {
       if (type === key) {
         const fn: Function = defineRenderFields[key];
         const { props }: { props: FormProps } = this;
-        if (!props[fn]) {
-          throw new Error(
-            `You need to initialize renderProps of the type "${type}" defined in defineRenderFields prop.\n Eg: <WilForm render${type}={({ name, label, ...}) => { return <FieldComponent /> }} ... />`
-          ).message;
-        }
+        throwErrorFnExist(props[fn], type);
         return props[fn](itemGeneral);
       }
     }
 
-    return this._throwErrorType(itemGeneral);
+    return throwErrorType(itemGeneral, defineRenderFields);
   };
 
   _handleItem = (
@@ -489,7 +386,7 @@ export default class WilForm extends Component<FormProps, FormState> {
     const _getIndex: number = moveByIndex(fields.length);
     const _index: number =
       _getIndex > fields.length - 1 ? fields.length - 1 : _getIndex;
-    this._handleErrorItemField(item);
+    throwErrorField(item);
     const elementWithIndex: React$Node = (
       <Fragment key="___elementWithIndex___">
         {render(this._handleSubmit)}
