@@ -15,7 +15,7 @@ npm install wil-form --save
 yarn add wil-form
 ```
 
-<img src="./wil-form.gif?raw=true" width="800">
+<img src="./wil-form2.gif?raw=true" width="800">
 
 **Basic Example**
 
