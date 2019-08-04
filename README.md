@@ -242,4 +242,4 @@ class App extends React.Component {
 | defaultErrors         | `Object`                            | `{}`    | default errors |
 | onSubmit              | `({result, valid, errors}) => void` | -  | when you take the action to submit the form |
 | onChange              | `({result, valid, errors}) => void` | -  | when you take the action to change the data field |
-| customSubmit          | `(handleSubmit: Function) => void`  | -  | see the [Example](https://codesandbox.io/s/drcd4) |
+| customSubmit          | `(handleSubmit: Function) => void`  | -  | see the [Example](https://codesandbox.io/s/wil-form-custom-submit-bwszi) |
