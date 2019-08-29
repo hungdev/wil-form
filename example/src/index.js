@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import WilForm from "../../src";
+import WilForm from "../../lib";
 
 class App extends React.Component {
   render() {

@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, Fragment } from "react";
-import { isEmpty, equals } from "ramda";
+import isEmpty from "ramda/es/isEmpty";
+import equals from "ramda/es/equals";
 import checkLength from "./checkLength";
 import checkSpecial from "./checkSpecial";
 import checkPresence from "./checkPresence";
